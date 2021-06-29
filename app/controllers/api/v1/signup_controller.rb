@@ -6,7 +6,8 @@ class Api::V1::SignupController < ApplicationController
     if a != nil
       render json: { status: 'ERROR', message: 'Username has already used' }, status: :ok
     else
-      Account.create(username: user, password: pass, role_id: 2, status_id: 1)
+      encrypt_pass = BCrypt::Password.create pass
+      Account.create(username: user, password: encrypt_pass, role_id: 2, status_id: 1)
       render json: { status: 'SUCCESS', message: 'Signup sucessful' }, status: :ok
     end
   end

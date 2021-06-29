@@ -1,3 +1,4 @@
+require 'bcrypt'
 class Api::V1::EditController < ApplicationController
   def edit
     user = params[:user]
@@ -13,9 +14,11 @@ class Api::V1::EditController < ApplicationController
     role = params[:role]
     status = params[:status]
     a = Account.find_by(username: user)
-    a.password = pass
     a.role_id = role
     a.status_id = status
+    if pass != nil && pass != ""
+      a.password = BCrypt::Password.create pass
+    end
     if a.save
       render json: { status: 'SUCCESS', message: 'update info' }, status: :ok
     else
