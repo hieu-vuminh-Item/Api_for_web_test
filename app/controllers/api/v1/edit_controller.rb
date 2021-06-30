@@ -3,7 +3,7 @@ class Api::V1::EditController < ApplicationController
   def edit
     user = params[:user]
     item = Account.where(:username => user).first
-    listrole = Role.all
+    listrole = Role.where.not(:id => 1)
     liststatus = Status.all
     render json: { status: 'SUCCESS', message: 'edit info', account: item, role: listrole, status: liststatus }, status: :ok
   end
