@@ -1,4 +1,5 @@
 require 'bcrypt'
+
 class Api::V1::LoginController < ApplicationController
   def login_api
     a = Account.where(:username => params[:user]).first
@@ -9,7 +10,10 @@ class Api::V1::LoginController < ApplicationController
     elsif BCrypt::Password.new(a.password) != params[:pass]
       render json: { status: 'ERROR', message: 'Wrong password' }, status: :ok
     else
-       render json: { status: 'SUCCESS', message: 'Logged in', data: a.username }, status: :ok
+      authen = Authenication.new
+      token = authen.gen_token(a.username, a.password)
+      decode = authen.authorized(token)
+      render json: { status: 'SUCCESS', message: 'Logged in', data: token }, status: :ok
     end
   end
 end
