@@ -3,7 +3,11 @@ class Api::V1::InfoController < ApplicationController
     if params[:user] == nil || params[:user] == ""
       render json: { status: 'SUCCESS', message: 'you must login first' }, status: :ok
     else
-      a = Account.where(:username => params[:user]).first
+      authen = Authenication.new
+      a = authen.authorized(params[:user])
+      if a == nil
+        render json: { status: 'ERROR', message: 'no info', data: a }, status: :ok
+      end
       admin_role = [1, 3]
       if admin_role.include? a.role_id
         sql = "select a.username, r.name as 'role_name', s.name as 'status_name'
