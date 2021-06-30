@@ -11,9 +11,4 @@ class Api::V1::SignupController < ApplicationController
       render json: { status: 'SUCCESS', message: 'Signup sucessful' }, status: :ok
     end
   end
-
-  private
-  def account_params
-    params.permit(:username, :password)
-  end
 end
